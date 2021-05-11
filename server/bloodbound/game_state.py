@@ -1,6 +1,6 @@
 from typing import List, Dict, Tuple, Any, Optional, Set
 from enum import Enum
-from dataclass import dataclass, field, asdict
+from dataclasses import dataclass, field, asdict
 import random
 
 
@@ -53,17 +53,17 @@ class Item(Enum):
 
 
 #TODO: populate with FSM
-class Step(Enum):
+class Step(str, Enum):
     LOBBY         = "lobby"
     INGAME        = "ingame"
     COMPLETE      = "complete"
 
 
 class Player:
-    self.team: Team
-    self.role: Role
-    self.tokens: List[Token]
-    self.items: List[Item]
+    team: Team
+    role: Role
+    tokens: List[Token]
+    items: List[Item]
 
     def __lt__(self, other):
         if self.__class__ is other.__class__:
@@ -73,12 +73,14 @@ class Player:
 
 @dataclass
 class GameState:
-    players: Dict[PlayerID: Player] = field(default_factory=lambda: {})
+    players: Dict[PlayerID, Player] = field(default_factory=lambda: {})
     target: Optional[PlayerID] = None
     step: Step = Step.LOBBY
 
-    def build(self, pids: Set[PlayerID]):
+    @classmethod
+    def build(cls, pids: Set[PlayerID]):
         assert len(pids) % 2 == 0 # don't support inquisitor yet
+        new_instance = GameState()
         team_size = len(pids) // 2
         red_team = set(random.sample(pids, k=team_size))
         red_roles = random.sample(list(Role), k=team_size)
@@ -89,7 +91,8 @@ class GameState:
             tokens = role.tokens()
             items = []
             player = Player(team, role, tokens, items)
-            self.players[pid] = player
+            new_instance.players[pid] = player
+        return new_instance
 
     def encode(self) -> Dict[str, Any]:
         return asdict(self)

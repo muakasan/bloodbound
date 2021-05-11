@@ -30,6 +30,10 @@ class Game:
         self.player_ids = set()
         self.new_game()
 
+    def request_game_state(self) -> None:
+        join_room(self.game_code)
+        self.emit_game_state()
+
     def emit_game_state(self) -> None:
         self.sio.emit("gameState", self.state.encode(), json=True, room=self.game_code)
 

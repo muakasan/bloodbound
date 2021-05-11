@@ -37,6 +37,14 @@ def active_game(func):
 
     return wrapper
 
+@socketio.on("requestGameState")
+@active_game
+def handle_request_game_state(game: Game) -> None:
+    game.request_game_state()
+
+@socketio.on('message')
+def handle_message(data):
+    print('received message: ' + data)
 
 @socketio.on("joinGame")
 @active_game
