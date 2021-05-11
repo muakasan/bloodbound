@@ -4,13 +4,12 @@ import random
 import os
 from typing import Any
 
-from wavelength.game import Game
-from wavelength.game_state import Direction
+from bloodbound.game import Game
+from bloodbound.game_state import PlayerID, Token
 
 app = Flask(__name__, static_folder="../client/build")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-possible_clues = []
 games = {}
 
 
@@ -38,35 +37,25 @@ def active_game(func):
 
     return wrapper
 
-
 @socketio.on("requestGameState")
 @active_game
 def handle_request_game_state(game: Game) -> None:
     game.request_game_state()
 
+@socketio.on('message')
+def handle_message(data):
+    print('received message: ' + data)
 
-@socketio.on("setDirection")
+@socketio.on("joinGame")
 @active_game
-def handle_set_direction(game: Game, direction: Direction) -> None:
-    game.set_direction(direction)
+def handle_join_game(game: Game, pid: PlayerID) -> None:
+    game.join_game(pid)
 
 
-@socketio.on("setDialPosition")
+@socketio.on("setTarget")
 @active_game
-def handle_set_dial_position(game: Game, dial_position: float) -> None:
-    game.set_dial_position(dial_position)
-
-
-@socketio.on("reveal")
-@active_game
-def handle_reveal(game: Game) -> None:
-    game.reveal()
-
-
-@socketio.on("nextRound")
-@active_game
-def handle_next_round(game: Game) -> None:
-    game.next_round()
+def handle_set_target(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.set_target(pid, target_pid)
 
 
 @socketio.on("newGame")

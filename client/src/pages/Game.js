@@ -204,7 +204,6 @@ class Device extends Component {
   };
 
   render() {
-    const step;
     const { psychic, gameState, loading } = this.state;
 
     const elements = ['test', 'test2'];
@@ -250,7 +249,7 @@ class Device extends Component {
           </div>
         </div>
       );
-    } 
+    }
 
     const {
       dialPosition,
