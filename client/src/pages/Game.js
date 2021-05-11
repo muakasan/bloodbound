@@ -16,7 +16,16 @@ export default function Game() {
   let { lobbyId } = useParams();
   return <Device lobbyId={lobbyId} />;
 }
-
+// https://stackoverflow.com/a/9188211
+// Converts player dict to array and sorts by position
+// TODO handle putting current player last
+function sortPlayers(playersDict){
+  let playersArray = Object.values(playersDict);
+  playersArray.sort(function(a, b){
+    return a.position < b.position ? 1 : -1
+  });
+  return playersArray
+}
 class Device extends Component {
   constructor(props) {
     super(props);
@@ -278,13 +287,20 @@ class Device extends Component {
       players, 
       step
     } = gameState;
+    console.log(typeof players);
+    let playersList = sortPlayers(players);
     if (step === Step.LOBBY){
       console.log(gameState);
       return (
         <div className="device_parent">
         <p>In Lobby</p>
-        <PlayerCard
-          onMouseDown={this.playerCardClicked}/>
+        <ul>
+          { playersList.map((value, index) => {
+            return <PlayerCard 
+              onMouseDown={this.playerCardClicked}
+              player={value}/>
+          })}
+        </ul>
         </div>
       )
     }

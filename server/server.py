@@ -6,26 +6,6 @@ from typing import Any
 
 from bloodbound.game import Game
 from bloodbound.game_state import PlayerID, Token
-from json import JSONEncoder
-
-# https://stackoverflow.com/a/3768975
-# https://stackoverflow.com/a/38764817
-class MyEncoder(JSONEncoder):
-    def default(self, obj):
-        print('test!!')
-        return getattr(obj.__class__, "to_json", JSONEncoder().default)(obj)
-        
-# https://github.com/miguelgrinberg/flask-socketio/issues/274#issuecomment-231206374
-class MyJsonWrapper(object):
-    @staticmethod
-    def dumps(*args, **kwargs):
-        if 'cls' not in kwargs:
-            kwargs['cls'] = MyEncoder
-        return json.dumps(*args, **kwargs)
-
-    @staticmethod
-    def loads(*args, **kwargs):
-        return json.loads(*args, **kwargs)
 
 app = Flask(__name__, static_folder="../client/build")
 socketio = SocketIO(app, cors_allowed_origins="*")

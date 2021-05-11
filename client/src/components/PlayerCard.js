@@ -1,17 +1,19 @@
 import React, { Component } from "react";
+import { Token, Role, Item, Step } from "../enums";
 
-const EMOJIS = {
-  RED_CIRCLE: String.fromCodePoint(0x1F534),
-  BLUE_CIRCLE: String.fromCodePoint(0x1F535),
-  WHITE_CIRCLE: String.fromCodePoint(0x26AA),
-  KNIFE: String.fromCodePoint(0x1F52A),
-  QUILL: String.fromCodePoint(0x2712, 0xFE0F), // Pen Nib
-  SWORD: String.fromCodePoint(0x2694, 0xFE0F),
-  SHIELD: String.fromCodePoint(0x1F6E1, 0xFE0F),
-  FAN: String.fromCodePoint(0x1F341), // Maple Leaf
-  STAFF: String.fromCodePoint(0x1F9AF), // White Cane 
-  CURSE: String.fromCodePoint(0x1F4D3), // Notebook 
-}
+let ITEMTOEMOJI = {}
+ITEMTOEMOJI[Item.QUILL] = String.fromCodePoint(0x2712, 0xFE0F);
+ITEMTOEMOJI[Item.SWORD] = String.fromCodePoint(0x2694, 0xFE0F); // Crossed Swords
+ITEMTOEMOJI[Item.SHIELD] = String.fromCodePoint(0x1F6E1, 0xFE0F); // Shield
+ITEMTOEMOJI[Item.FAN] = String.fromCodePoint(0x1F341); // Maple Leaf
+ITEMTOEMOJI[Item.STAFF] = String.fromCodePoint(0x1F9AF); // White Cane 
+ITEMTOEMOJI[Item.TRUECURSE] = String.fromCodePoint(0x1F4D3); // Notebook 
+ITEMTOEMOJI[Item.FALSECURSE] = String.fromCodePoint(0x1F4D3); // Notebook
+
+let TOKENTOEMOJI = {}
+TOKENTOEMOJI[Token.BLUE] = String.fromCodePoint(0x1F535); // Blue Circle
+TOKENTOEMOJI[Token.RED] = String.fromCodePoint(0x1F534); // Red Circle
+TOKENTOEMOJI[Token.GREY] = String.fromCodePoint(0x26AA); // White Circle
 
 export default class PlayerCard extends Component {
   constructor(props) {
@@ -43,7 +45,8 @@ export default class PlayerCard extends Component {
   }
 
   render() {
-    const { onMouseDown } = this.props;
+    const { onMouseDown, player } = this.props;
+    const { tokens, items } = player;
     const { playerName } = this.state;
     return (
       <li onMouseDown={(event) => {
@@ -54,7 +57,19 @@ export default class PlayerCard extends Component {
       }}
       onMouseLeave={() => this.setState({ hover: false })}
       onMouseEnter={() => this.setState({ hover: true })}
-    >{playerName} {EMOJIS.RED_CIRCLE} {EMOJIS.BLUE_CIRCLE} {EMOJIS.WHITE_CIRCLE} {EMOJIS.KNIFE} {EMOJIS.QUILL} {EMOJIS.SWORD} {EMOJIS.SHIELD} {EMOJIS.FAN} {EMOJIS.STAFF}</li>
+    >{playerName}
+    {' '}
+    { tokens.map(token => {
+      if (token === Token.RANK){
+        return <strong>{ player.role }</strong>;
+      }
+      return TOKENTOEMOJI[token];
+    }) }
+    {' - '}
+    { items.map(item => {
+      return ITEMTOEMOJI[item];
+    }) }
+    </li>
     );
   }
 }

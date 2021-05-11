@@ -1,5 +1,5 @@
 from typing import List, Dict, Tuple, Any, Optional, Set
-from enum import Enum
+from enum import Enum, IntEnum
 from dataclasses import dataclass, field, asdict
 import random
 
@@ -25,7 +25,20 @@ class Token(str, Enum):
     RANK = "rank"
     TEAM = "team"
 
+class Role(IntEnum):
+    ELDER     = 1
+    ASSASSIN  = 2
+    HARLEQUIN = 3
+    ALCHEMIST = 4
+    MENTALIST = 5
+    GUARDIAN  = 6
+    BERSERKER = 7
+    MAGE      = 8
+    COURTESAN = 9
 
+    def tokens(self) -> List[Token]:
+        return []
+'''
 class Role(Enum):
     ELDER     = (1, "elder", Token.GREY, Token.GREY)
     ASSASSIN  = (2, "assassin", Token.GREY, Token.GREY)
@@ -47,7 +60,7 @@ class Role(Enum):
 
     def to_json(self):
         return self.value[0]
-
+'''
 
 class Item(str, Enum):
     SWORD = "sword"
@@ -55,6 +68,8 @@ class Item(str, Enum):
     STAFF = "staff"
     SHIELD = "shield"
     QUILL = "quill"
+    FALSECURSE = "falsecurse"
+    TRUECURSE = "truecurse"
 
 
 #TODO: populate with FSM
@@ -69,6 +84,7 @@ class Player:
     role: Role
     tokens: List[Token]
     items: List[Item]
+    position: int
 
     def __lt__(self, other):
         if self.__class__ is other.__class__:
@@ -91,13 +107,12 @@ class GameState:
             red_team = set(random.sample(pids, k=team_size))
             red_roles = random.sample(list(Role), k=team_size)
             blue_roles = random.sample(list(Role), k=team_size)
-            print(blue_roles)
             for pid in pids:
                 team = Team.RED if pid in red_team else Team.BLUE
                 role = red_roles.pop() if team == Team.RED else blue_roles.pop()
                 tokens = role.tokens()
                 items = []
-                player = Player(team, role, tokens, items)
+                player = Player(team, role, tokens, items, pid) # PID currently is position index
                 new_instance.players[pid] = player
             new_instance.players[0].items = [Item.SWORD, Item.STAFF]
             new_instance.players[1].items = [Item.SHIELD]
@@ -115,7 +130,7 @@ class GameState:
             role = red_roles.pop() if team == Team.RED else blue_roles.pop()
             tokens = role.tokens()
             items = []
-            player = Player(team, role, tokens, items)
+            player = Player(team, role, tokens, items, 0) # TODO make position correct
             new_instance.players[pid] = player
         return new_instance
 

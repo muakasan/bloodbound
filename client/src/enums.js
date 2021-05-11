@@ -28,6 +28,8 @@ const Item = {
   STAFF: "staff",
   SHIELD: "shield",
   QUILL: "quill",
+  TRUECURSE: "truecurse",
+  FALSECURSE: "falsecurse",
 };
 
 const Step = {
