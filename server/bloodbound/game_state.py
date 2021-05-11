@@ -23,6 +23,7 @@ class Token(Enum):
     BLUE = "blue"
     RED = "red"
     RANK = "rank"
+    TEAM = "team"
 
 
 class Role(Enum):
