@@ -1,9 +1,6 @@
 from bloodbound.game_state import PlayerID, GameState, Team, Step
 from flask_socketio import SocketIO, join_room
 import random
-import json
-
-
 
 class Game:
     def handler(*steps: Step):
@@ -38,7 +35,7 @@ class Game:
         self.sio.emit("gameState", self.state.encode(), json=True, room=self.game_code)
 
     def new_game(self):
-        self.state = GameState.build(self.player_ids)
+        self.state = GameState.build(self.player_ids, dummy=True)
 
     @handler(Step.LOBBY)
     def join_game(self, pid: PlayerID) -> None:

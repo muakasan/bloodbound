@@ -7,7 +7,7 @@ import random
 PlayerID = int
 
 
-class Team(Enum):
+class Team(str, Enum):
     RED  = "red"
     BLUE = "blue"
 
@@ -18,7 +18,7 @@ class Team(Enum):
             return Team.RED
 
 
-class Token(Enum):
+class Token(str, Enum):
     GREY = "grey"
     BLUE = "blue"
     RED = "red"
@@ -45,8 +45,11 @@ class Role(Enum):
             return self.value < other.value
         return NotImplemented
 
+    def to_json(self):
+        return self.value[0]
 
-class Item(Enum):
+
+class Item(str, Enum):
     SWORD = "sword"
     FAN = "fan"
     STAFF = "staff"
@@ -60,7 +63,7 @@ class Step(str, Enum):
     INGAME        = "ingame"
     COMPLETE      = "complete"
 
-
+@dataclass
 class Player:
     team: Team
     role: Role
@@ -80,7 +83,27 @@ class GameState:
     step: Step = Step.LOBBY
 
     @classmethod
-    def build(cls, pids: Set[PlayerID]):
+    def build(cls, pids: Set[PlayerID], dummy=False):
+        if dummy:
+            pids = set([0, 1, 2, 3, 4, 5, 6, 7])
+            new_instance = GameState()
+            team_size = len(pids) // 2
+            red_team = set(random.sample(pids, k=team_size))
+            red_roles = random.sample(list(Role), k=team_size)
+            blue_roles = random.sample(list(Role), k=team_size)
+            print(blue_roles)
+            for pid in pids:
+                team = Team.RED if pid in red_team else Team.BLUE
+                role = red_roles.pop() if team == Team.RED else blue_roles.pop()
+                tokens = role.tokens()
+                items = []
+                player = Player(team, role, tokens, items)
+                new_instance.players[pid] = player
+            new_instance.players[0].items = [Item.SWORD, Item.STAFF]
+            new_instance.players[1].items = [Item.SHIELD]
+            new_instance.players[1].tokens = [Token.BLUE, Token.GREY]
+            new_instance.players[2].tokens = [Token.RANK]
+            return new_instance
         assert len(pids) % 2 == 0 # don't support inquisitor yet
         new_instance = GameState()
         team_size = len(pids) // 2

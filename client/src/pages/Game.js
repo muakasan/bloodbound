@@ -279,6 +279,7 @@ class Device extends Component {
       step
     } = gameState;
     if (step === Step.LOBBY){
+      console.log(gameState);
       return (
         <div className="device_parent">
         <p>In Lobby</p>
