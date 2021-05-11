@@ -1,0 +1,611 @@
+$red: #cd2335;
+$dialBlue: #1b1c49;
+
+$outerDeviceDiameter: 800px;
+$outerDeviceBorder: 10px;
+
+.device_parent {
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 95px;
+  width: $outerDeviceDiameter;
+  height: $outerDeviceDiameter;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.device_outer {
+  background-color: #f4ede1;
+
+  width: $outerDeviceDiameter;
+  height: $outerDeviceDiameter;
+
+  border-radius: $outerDeviceDiameter;
+
+  position: relative;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+$deviceDiameter: $outerDeviceDiameter - 2 * $outerDeviceBorder;
+$deviceBorder: 25px;
+
+.device {
+  position: absolute;
+  left: $outerDeviceBorder;
+  top: $outerDeviceBorder;
+
+  background-color: $dialBlue;
+
+  width: $deviceDiameter;
+  height: $deviceDiameter;
+
+  border-radius: $deviceDiameter;
+}
+
+$innerDeviceDiameter: $deviceDiameter - 2 * $deviceBorder;
+$innerDeviceHeight: $innerDeviceDiameter / 2;
+
+.device_inner {
+  position: absolute;
+  left: $deviceBorder;
+  top: $deviceBorder;
+
+  background-color: #f4ede1;
+
+  width: $innerDeviceDiameter;
+  height: $innerDeviceHeight;
+
+  border-top-left-radius: $innerDeviceDiameter;
+  border-top-right-radius: $innerDeviceDiameter;
+
+  overflow: hidden;
+}
+
+.target {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  transform-origin: bottom center;
+}
+
+.target:before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+
+  transform-origin: bottom center;
+
+  transform: rotate(-172.4deg);
+  content: "";
+}
+
+.target.four:before {
+  background-color: #5a839b;
+}
+
+.target.three:before {
+  background-color: #ed463b;
+}
+
+.target.two:before {
+  background-color: #ebaa21;
+}
+
+.target .number {
+  position: absolute;
+  height: 100%;
+  left: 50%;
+  bottom: 0;
+  transform-origin: bottom center;
+  font-size: 22px;
+  font-weight: bold;
+  transform: translate(-50%, 0) rotate(-86.25deg);
+}
+
+$wingShort: 65px;
+
+.device_wing_l {
+  transform: rotate(6deg);
+  transform-origin: bottom right;
+  width: calc(#{$deviceDiameter} / 2 - #{$wingShort});
+  background-color: $dialBlue;
+  height: 50px;
+
+  top: 300px;
+  left: 90px;
+  position: absolute;
+
+  top: calc(#{$deviceDiameter} / 2 - 3px);
+  left: $wingShort;
+
+  z-index: 4;
+}
+
+.device_wing_r {
+  transform: rotate(-6deg);
+  transform-origin: bottom left;
+  width: calc(#{$deviceDiameter} / 2 - #{$wingShort});
+  background-color: $dialBlue;
+  height: 50px;
+
+  top: 300px;
+  left: 90px;
+  position: absolute;
+
+  top: calc(#{$deviceDiameter} / 2 - 3px);
+  left: calc(#{$deviceDiameter} / 2);
+
+  z-index: 4;
+}
+
+$redDiameter: 125px;
+$dialShadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+
+.device_red {
+  position: absolute;
+
+  width: $redDiameter;
+  height: $redDiameter;
+
+  border-radius: $redDiameter;
+
+  top: calc(#{$deviceDiameter} / 2 - #{$redDiameter} / 2);
+  left: calc(#{$deviceDiameter} / 2 - #{$redDiameter} / 2);
+
+  background-color: $red;
+  z-index: 5;
+
+  box-shadow: $dialShadow;
+}
+
+$dialWidth: 14px;
+$dialHeight: 0.75;
+$dialOffset: 1-$dialHeight;
+
+.dial {
+  position: absolute;
+  transform-origin: bottom center;
+
+  height: calc(#{$innerDeviceDiameter} / 2 * #{$dialHeight});
+  width: $dialWidth;
+
+  top: calc((#{$innerDeviceDiameter} / 2) * #{$dialOffset});
+  left: calc(#{$innerDeviceDiameter} / 2 - #{$dialWidth} / 2);
+  border-radius: $dialWidth;
+
+  box-shadow: $dialShadow;
+
+  z-index: 3;
+
+  background-color: $red;
+
+  transition: transform 0.05s;
+}
+
+$screenShadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+
+.screen {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  transform-origin: bottom center;
+  background-color: #73b9b5;
+
+  box-shadow: $screenShadow;
+
+  transition: transform 1s ease;
+
+  border-top-left-radius: $innerDeviceHeight;
+  border-top-right-radius: $innerDeviceHeight;
+
+  cursor: pointer;
+}
+
+.screen.peek {
+  background-color: transparentize(#73b9b5, $amount: 0.5);
+}
+
+$handleWidth: 20px;
+$handleHeight: 1.25;
+$handleOffset: 1;
+
+.screenHandle {
+  position: absolute;
+  transform-origin: center left;
+
+  width: calc(#{$deviceDiameter} / 2 * #{$handleHeight});
+  height: $handleWidth;
+
+  left: calc((#{$deviceDiameter} / 2) * #{$handleOffset});
+  top: calc(#{$deviceDiameter} / 2 - #{$handleWidth} / 2);
+  border-radius: $handleWidth;
+
+  //box-shadow: $screenShadow;
+
+  z-index: 2;
+
+  //background-color: #73b9b5;
+
+  transition: transform 1s ease;
+
+  cursor: pointer;
+}
+
+$handleShadow: 1px 0px 5px rgba(0, 0, 0, 0.5);
+
+$handleTextThick: $handleWidth + 20px;
+$handleTextWidth: 165px;
+
+.screenHandleText {
+  position: absolute;
+  top: calc((#{$handleWidth} - #{$handleTextThick}) / 2);
+  line-height: $handleTextThick;
+  right: 0;
+  height: $handleTextThick;
+  background-color: #73b9b5;
+  border-radius: $handleTextThick;
+  width: $handleTextWidth;
+  text-align: center;
+
+  box-shadow: $handleShadow;
+
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.screenHandleText.flipped span {
+  transform: rotate(180deg);
+  display: block;
+}
+
+$clueWidth: 350px;
+$clueHeight: 200px;
+$clueBottomOffset: 100px;
+$clueShadow: -5px 0px 10px 8px rgba(0, 0, 0, 0.3);
+
+.clue {
+  position: absolute;
+  width: $clueWidth;
+  height: $clueHeight;
+
+  left: calc(#{$outerDeviceDiameter} / 2 - #{$clueWidth} / 2);
+
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  bottom: $clueBottomOffset;
+
+  z-index: 6;
+
+  box-shadow: $clueShadow;
+
+  overflow: hidden;
+
+  transition: height 0.5s ease;
+}
+
+.clue:after {
+  content: "";
+  position: absolute;
+
+  bottom: 0;
+  width: 100%;
+  left: 0;
+
+  box-shadow: -5px 0px 5px 3px rgba(0, 0, 0, 0.3);
+}
+
+.clue.hide {
+  height: 0;
+}
+
+.clueLeft {
+  position: absolute;
+  left: 0;
+  background-color: #817289;
+}
+
+.clueRight {
+  position: absolute;
+  right: 0;
+  background-color: #77bdbb;
+}
+
+.clueLeft,
+.clueRight {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  top: 0;
+  width: 50%;
+  height: $clueHeight;
+}
+
+.clueLeft .text,
+.clueRight .text {
+  padding: 10px;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.clueHole {
+  position: absolute;
+  width: $clueWidth;
+  height: 0px;
+  padding: 5px;
+  padding-top: 15px;
+
+  border-radius: 3px;
+
+  bottom: calc(#{$clueBottomOffset} - 5px);
+  left: calc(#{$outerDeviceDiameter} / 2 - #{$clueWidth} / 2 - 5px);
+
+  background-color: black;
+  z-index: 5;
+}
+
+$arrowWidth: 80px;
+
+.arrowBase {
+  height: 3px;
+  width: $arrowWidth;
+  background-color: black;
+  position: absolute;
+
+  top: 40px;
+  left: calc((#{$clueWidth} / 2 - #{$arrowWidth}) / 2);
+}
+
+.arrowTip {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  padding: 8px;
+  position: absolute;
+
+  top: calc(40px - 8px);
+}
+
+.right {
+  transform: rotate(-45deg);
+  right: calc((#{$clueWidth} / 2 - #{$arrowWidth}) / 2);
+}
+
+.left {
+  transform: rotate(135deg);
+  left: calc((#{$clueWidth} / 2 - #{$arrowWidth}) / 2);
+}
+
+.leftBrain {
+  left: -35px;
+}
+
+.rightBrain {
+  right: -35px;
+}
+
+.score {
+  position: absolute;
+  top: -35px;
+  font-size: 64px;
+
+  width: 100px;
+  height: 100px;
+
+  border-radius: 100px;
+
+  line-height: 100px;
+  text-align: center;
+  font-size: 64px;
+
+  font-weight: bold;
+}
+
+.value {
+  z-index: 3;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding-bottom: 20px;
+}
+
+.score .brain {
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+  width: 140px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  stroke: black;
+  stroke-width: 0px;
+
+  transition: stroke-width 0.15s ease-out;
+}
+
+.score.turn .brain {
+  stroke-width: 7px;
+}
+
+.togglePeek {
+  position: absolute;
+
+  right: 90px;
+  bottom: 270px;
+
+  width: 100px;
+  height: 100px;
+
+  border-radius: 100px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+
+  background-color: #e9cad3;
+
+  z-index: 5;
+
+  line-height: 100px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.gameOver {
+  position: absolute;
+
+  left: calc(#{$outerDeviceDiameter} / 2 - 80px - 150px);
+  bottom: -200px;
+
+  width: 330px;
+  height: 165px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+
+  padding-left: 150px;
+
+  background-color: #f4ede1;
+
+  text-align: center;
+  line-height: 70px;
+  font-weight: bold;
+  padding-top: 15px;
+  font-size: 24px;
+}
+
+.gameOver .brain {
+  width: 140px;
+  position: absolute;
+  left: 90px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  stroke: black;
+  stroke-width: 0px;
+
+  transition: stroke-width 0.15s ease-out;
+}
+
+.newGame {
+  position: relative;
+  display: inline-block;
+
+  width: 180px;
+  height: 60px;
+
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+
+  background-color: #d74227;
+
+  z-index: 5;
+
+  line-height: 60px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.directionToggle {
+  position: absolute;
+
+  left: 90px;
+  bottom: 285px;
+
+  width: 100px;
+  height: 70px;
+
+  z-index: 5;
+
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+
+  overflow: hidden;
+
+  cursor: pointer;
+}
+
+.directionToggleInner {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 180px;
+  height: 100%;
+
+  transition: left 0.1s;
+}
+
+.toggled .directionToggleInner {
+  left: -80px;
+}
+
+.hovered .directionToggleInner {
+  left: -40px;
+}
+
+.leftBox {
+  left: 0;
+  background-color: #d29627;
+}
+
+.rightBox {
+  right: 0;
+  background-color: #e35f2d;
+}
+
+.leftBox,
+.rightBox {
+  position: absolute;
+
+  top: 0;
+
+  width: 90px;
+  height: 100%;
+
+  line-height: 70px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.homepage {
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 95px;
+  width: 500px;
+  text-align: center;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.homepage h1 {
+  font-size: 72px;
+}
+
+.homepage input {
+  height: 30px;
+  font-size: 24px;
+  padding: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #888888;
+  border-radius: 2px;
+}
