@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { useParams } from "react-router-dom";
 import socketIOClient from "socket.io-client";
+import PlayerCard from "../components/PlayerCard";
+
 /*
 import { LeftBrain, RightBrain } from "../components/Shapes";
 import DirectionToggle from "../components/DirectionToggle";
@@ -87,7 +89,27 @@ class Device extends Component {
       client: client,
     });
   }
+  playerCardClicked = (event) => {
+    console.log("Hello at PlayerCard");
+    /*
+    const { client, gameState, psychic, controlsDisabled } = this.state;
+    const { lobbyId } = this.props;
 
+    if (!gameState.screenClosed || psychic || controlsDisabled) {
+      return;
+    }
+
+    this.setState({
+      gameState: {
+        ...gameState,
+        direction: Direction.getOther(gameState.direction),
+        },
+      },
+      () => {
+        client.emit("setDirection", lobbyId, this.state.gameState.direction);
+    });
+    */
+  };
   // togglePsychicClicked = (event) => {
   //   const { psychic, controlsDisabled } = this.state;
 
@@ -260,6 +282,8 @@ class Device extends Component {
       return (
         <div className="device_parent">
         <p>In Lobby</p>
+        <PlayerCard
+          onMouseDown={this.playerCardClicked}/>
         </div>
       )
     }
