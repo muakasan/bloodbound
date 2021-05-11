@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { useParams } from "react-router-dom";
 import socketIOClient from "socket.io-client";
-
+/*
 import { LeftBrain, RightBrain } from "../components/Shapes";
 import DirectionToggle from "../components/DirectionToggle";
 import Clue from "../components/Clue";
 import Target from "../components/Target";
 import ScoreIndicator from "../components/ScoreIndicator";
-import { Team, Direction } from "../enums";
+*/
+import { Token, Role, Item, Step } from "../enums";
 
 export default function Game() {
   let { lobbyId } = useParams();
@@ -87,91 +88,91 @@ class Device extends Component {
     });
   }
 
-  togglePsychicClicked = (event) => {
-    const { psychic, controlsDisabled } = this.state;
+  // togglePsychicClicked = (event) => {
+  //   const { psychic, controlsDisabled } = this.state;
 
-    if (controlsDisabled) {
-      return;
-    }
+  //   if (controlsDisabled) {
+  //     return;
+  //   }
 
-    this.setState({
-      psychic: !psychic,
-    });
-  };
+  //   this.setState({
+  //     psychic: !psychic,
+  //   });
+  // };
 
-  directionToggleClicked = (event) => {
-    const { client, gameState, psychic, controlsDisabled } = this.state;
-    const { lobbyId } = this.props;
+  // directionToggleClicked = (event) => {
+  //   const { client, gameState, psychic, controlsDisabled } = this.state;
+  //   const { lobbyId } = this.props;
 
-    if (!gameState.screenClosed || psychic || controlsDisabled) {
-      return;
-    }
+  //   if (!gameState.screenClosed || psychic || controlsDisabled) {
+  //     return;
+  //   }
 
-    this.setState(
-      {
-        gameState: {
-          ...gameState,
-          direction: Direction.getOther(gameState.direction),
-        },
-      },
-      () => {
-        client.emit("setDirection", lobbyId, this.state.gameState.direction);
-      }
-    );
-  };
+  //   this.setState(
+  //     {
+  //       gameState: {
+  //         ...gameState,
+  //         direction: Direction.getOther(gameState.direction),
+  //       },
+  //     },
+  //     () => {
+  //       client.emit("setDirection", lobbyId, this.state.gameState.direction);
+  //     }
+  //   );
+  // };
 
-  newGameClicked = (event) => {
-    let { client, controlsDisabled } = this.state;
-    const { lobbyId } = this.props;
+  // newGameClicked = (event) => {
+  //   let { client, controlsDisabled } = this.state;
+  //   const { lobbyId } = this.props;
 
-    if (controlsDisabled) {
-      return;
-    }
+  //   if (controlsDisabled) {
+  //     return;
+  //   }
 
-    this.disableControls();
-    client.emit("newGame", lobbyId);
-  };
+  //   this.disableControls();
+  //   client.emit("newGame", lobbyId);
+  // };
 
-  dialClicked = (event) => {
-    const { client, gameState, psychic, controlsDisabled } = this.state;
-    const { lobbyId } = this.props;
-    if (!gameState.screenClosed || psychic || controlsDisabled) {
-      return;
-    }
+  // dialClicked = (event) => {
+  //   const { client, gameState, psychic, controlsDisabled } = this.state;
+  //   const { lobbyId } = this.props;
+  //   if (!gameState.screenClosed || psychic || controlsDisabled) {
+  //     return;
+  //   }
 
-    const rect = this.deviceInner.current.getBoundingClientRect();
+  //   const rect = this.deviceInner.current.getBoundingClientRect();
 
-    const xOrigin = rect.x + rect.width / 2;
-    const yOrigin = rect.y + rect.height;
+  //   const xOrigin = rect.x + rect.width / 2;
+  //   const yOrigin = rect.y + rect.height;
 
-    const xOffset = event.clientX - xOrigin;
-    const yOffset = event.clientY - yOrigin;
+  //   const xOffset = event.clientX - xOrigin;
+  //   const yOffset = event.clientY - yOrigin;
 
-    let rotation = 2 * Math.PI - Math.atan2(xOffset, yOffset);
-    if (rotation > 2 * Math.PI) {
-      rotation -= 2 * Math.PI;
-    }
+  //   let rotation = 2 * Math.PI - Math.atan2(xOffset, yOffset);
+  //   if (rotation > 2 * Math.PI) {
+  //     rotation -= 2 * Math.PI;
+  //   }
 
-    let dialPosition = rotation / Math.PI - 0.5;
-    dialPosition = Math.min(dialPosition, 0.95);
-    dialPosition = Math.max(dialPosition, 0.05);
+  //   let dialPosition = rotation / Math.PI - 0.5;
+  //   dialPosition = Math.min(dialPosition, 0.95);
+  //   dialPosition = Math.max(dialPosition, 0.05);
 
-    this.setState(
-      {
-        gameState: {
-          ...gameState,
-          dialPosition: dialPosition,
-        },
-      },
-      () => {
-        client.emit(
-          "setDialPosition",
-          lobbyId,
-          this.state.gameState.dialPosition
-        );
-      }
-    );
-  };
+  //   this.setState(
+  //     {
+  //       gameState: {
+  //         ...gameState,
+  //         dialPosition: dialPosition,
+  //       },
+  //     },
+  //     () => {
+  //       client.emit(
+  //         "setDialPosition",
+  //         lobbyId,
+  //         this.state.gameState.dialPosition
+  //       );
+  //     }
+  //   );
+  // };
 
   screenHandleClicked = (event) => {
     let { client, gameState, controlsDisabled } = this.state;
@@ -252,51 +253,59 @@ class Device extends Component {
     }
 
     const {
-      dialPosition,
-      screenClosed,
-      targetPosition,
-      clues,
-      clueColor,
-      score,
-      turn,
-      direction,
-      complete,
+      players, 
+      step
     } = gameState;
-    const rotation = Math.PI * (dialPosition + 1.5);
-    return (
-
-      <div className="device_parent">
-        <p>Would you like to intervene?</p>
-        <ul>
-          <li>Yes</li>
-          <li>No</li> 
-        </ul>
-        <p>Who would you like to intervene?</p>
-        <ul>
-          <li>Yes</li>
-          <li>No</li> 
-        </ul>
-        <p>Pick Your Wound</p>
-        <ul>
-          <li>Red</li>
-          <li>Blue</li>
-          <li>Mystery</li>
-          <li>Rank</li>
-        </ul> 
-        <ul>
-          <li>Red</li>
-          <li>Blue</li>
-          <li>Mystery</li>
-          <li>Rank</li>
-        </ul> 
-        <ul>
-          {elements.map((value, index) => {
-          return <li key={index}>{value}</li>
-          })}
-        </ul>
+    if (step === Step.LOBBY){
+      return (
+        <div className="device_parent">
+        <p>In Lobby</p>
         </div>
+      )
+    }
+    if (step === Step.INGAME){
+      return (
+        <div className="device_parent">
+          <p>Would you like to intervene?</p>
+          <ul>
+            <li>Yes</li>
+            <li>No</li> 
+          </ul>
+          <p>Who would you like to intervene?</p>
+          <ul>
+            <li>Yes</li>
+            <li>No</li> 
+          </ul>
+          <p>Pick Your Wound</p>
+          <ul>
+            <li>Red</li>
+            <li>Blue</li>
+            <li>Mystery</li>
+            <li>Rank</li>
+          </ul> 
+          <ul>
+            <li>Red</li>
+            <li>Blue</li>
+            <li>Mystery</li>
+            <li>Rank</li>
+          </ul> 
+          <ul>
+            {elements.map((value, index) => {
+            return <li key={index}>{value}</li>
+            })}
+          </ul>
+        </div>
+      );        
+    }
+    if (step === Step.COMPLETE){
+      return (
+        <div className="device_parent">
+        <p>Game Over</p>
+        </div>
+      )
+    }
+    // const rotation = Math.PI * (dialPosition + 1.5);
 
-        );        
     /*
     const winner =
       score[Team.LEFT_BRAIN] <= score[Team.RIGHT_BRAIN]

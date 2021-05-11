@@ -1,14 +1,39 @@
 const Team = {
-  LEFT_BRAIN: "left_brain",
-  RIGHT_BRAIN: "right_brain",
+  RED: "red",
+  BLUE: "blue",
 };
 
-const Direction = {
-  LEFT: "left",
-  RIGHT: "right",
-  getOther: (dir) => {
-    return dir == "left" ? "right" : "left";
-  },
+const Token = {
+  GREY: "grey",
+  BLUE: "blue",
+  RED: "red",
+  RANK: "rank",
 };
 
-export { Team, Direction };
+const Role = {
+  ELDER: 1,
+  ASSASSIN: 2,
+  HARLEQUIN: 3,
+  ALCHEMIST: 4,
+  MENTALIST: 5,
+  GUARDIAN: 6,
+  BERSERKER: 7,
+  MAGE: 8,
+  COURTESAN: 9,
+};
+
+const Item = {
+  SWORD: "sword",
+  FAN: "fan",
+  STAFF: "staff",
+  SHIELD: "shield",
+  QUILL: "quill",
+};
+
+const Step = {
+  LOBBY: "lobby",
+  INGAME: "ingame",
+  COMPLETE: "complete",
+};
+
+export { Token, Role, Item, Step };

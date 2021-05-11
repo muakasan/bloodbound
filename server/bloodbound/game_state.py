@@ -20,7 +20,8 @@ class Team(Enum):
 
 class Token(Enum):
     GREY = "grey"
-    TEAM = "team"
+    BLUE = "blue"
+    RED = "red"
     RANK = "rank"
 
 
