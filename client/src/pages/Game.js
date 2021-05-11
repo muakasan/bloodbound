@@ -263,6 +263,41 @@ class Device extends Component {
       complete,
     } = gameState;
     const rotation = Math.PI * (dialPosition + 1.5);
+    return (
+
+      <div className="device_parent">
+        <p>Would you like to intervene?</p>
+        <ul>
+          <li>Yes</li>
+          <li>No</li> 
+        </ul>
+        <p>Who would you like to intervene?</p>
+        <ul>
+          <li>Yes</li>
+          <li>No</li> 
+        </ul>
+        <p>Pick Your Wound</p>
+        <ul>
+          <li>Red</li>
+          <li>Blue</li>
+          <li>Mystery</li>
+          <li>Rank</li>
+        </ul> 
+        <ul>
+          <li>Red</li>
+          <li>Blue</li>
+          <li>Mystery</li>
+          <li>Rank</li>
+        </ul> 
+        <ul>
+          {elements.map((value, index) => {
+          return <li key={index}>{value}</li>
+          })}
+        </ul>
+        </div>
+
+        );        
+    /*
     const winner =
       score[Team.LEFT_BRAIN] <= score[Team.RIGHT_BRAIN]
         ? Team.RIGHT_BRAIN
@@ -342,6 +377,7 @@ class Device extends Component {
           )}
         </div>
       </div>
-    );
-  }
+    );*/
+  }    
+
 }
