@@ -1,10 +1,11 @@
 from typing import List, Dict, Tuple, Any, Optional, Set
-from enum import Enum, IntEnum
+#from enum import Enum, IntEnum
+from enum import Enum
 from dataclasses import dataclass, field, asdict
 import random
 
 
-PlayerID = int
+PlayerID = str
 
 
 class Team(str, Enum):
@@ -25,7 +26,7 @@ class Token(str, Enum):
     RANK = "rank"
     TEAM = "team"
 
-class Role(IntEnum):
+class Role(int, Enum):
     ELDER     = 1
     ASSASSIN  = 2
     HARLEQUIN = 3
@@ -37,30 +38,18 @@ class Role(IntEnum):
     COURTESAN = 9
 
     def tokens(self) -> List[Token]:
-        return []
-'''
-class Role(Enum):
-    ELDER     = (1, "elder", Token.GREY, Token.GREY)
-    ASSASSIN  = (2, "assassin", Token.GREY, Token.GREY)
-    HARLEQUIN = (3, "harlequin", Token.GREY, Token.GREY)
-    ALCHEMIST = (4, "alchemist", Token.TEAM, Token.TEAM)
-    MENTALIST = (5, "mentalist", Token.TEAM, Token.TEAM)
-    GUARDIAN  = (6, "guardian", Token.TEAM, Token.TEAM)
-    BERSERKER = (7, "berserker", Token.GREY, Token.TEAM)
-    MAGE      = (8, "mage", Token.GREY, Token.TEAM)
-    COURTESAN = (9, "courtesan", Token.GREY, Token.TEAM)
-
-    def tokens(self) -> List[Token]:
-        return [Token.RANK, *self.value[1:]]
+        if self in [Role.ELDER, Role.ASSASSIN, Role.HARLEQUIN]:
+            return [Token.RANK, Token.GREY, Token.GREY]
+        if self in [Role.ALCHEMIST, Role.MENTALIST, Role.GUARDIAN]:
+            return [Token.RANK, Token.TEAM, Token.TEAM]
+        if self in [Role.BERSERKER, Role.MAGE, Role.COURTESAN]:
+            return [Token.RANK, Token.GREY, Token.TEAM]
+        raise ValueError
 
     def __lt__(self, other):
         if self.__class__ is other.__class__:
             return self.value < other.value
-        return NotImplemented
-
-    def to_json(self):
-        return self.value[0]
-'''
+        return NotImplementedError
 
 class Item(str, Enum):
     SWORD = "sword"
@@ -75,8 +64,15 @@ class Item(str, Enum):
 #TODO: populate with FSM
 class Step(str, Enum):
     LOBBY         = "lobby"
-    INGAME        = "ingame"
+    SET_TARGET    = "set_target"
+    INTERVENE     = "intervene"
+    ACK_INTERVENE = "ack_intervene"
+    SET_WOUND_I   = "set_wound_i"
+    SET_ABILITY   = "set_ability"
+    SET_WOUND_II  = "set_wound_ii"
+    ACK_ABILITY   = "ack_ability"
     COMPLETE      = "complete"
+
 
 @dataclass
 class Player:
@@ -95,8 +91,11 @@ class Player:
 @dataclass
 class GameState:
     players: Dict[PlayerID, Player] = field(default_factory=lambda: {})
-    target: Optional[PlayerID] = None
     step: Step = Step.LOBBY
+    active: Optional[PlayerID] = None
+    target: Optional[PlayerID] = None
+    intervene_offers: Dict[PlayerID, bool] = field(default_factory=lambda: {})
+    intervener: Optional[PlayerID] = None
 
     @classmethod
     def build(cls, pids: Set[PlayerID], dummy=False):
