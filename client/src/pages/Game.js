@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import io from "socket.io-client";
 import PlayerCard from "../components/PlayerCard";
 import ChooseName from "../components/ChooseName";
@@ -7,15 +7,12 @@ import Lobby from "../components/Lobby";
 
 import { Token, Role, Item, Step } from "../enums";
 
-export default function Game() {
-  let { lobbyId } = useParams();
-  return <Device lobbyId={lobbyId} />;
-}
 
 class Device extends Component {
   constructor(props) {
     super(props);
 
+    this.lobbyId = this.props.match.params.lobbyId;
     this.deviceInner = React.createRef();
     this.state = {
       playerName: "",
@@ -27,9 +24,8 @@ class Device extends Component {
   componentDidMount() {
     const serverUrl = process.env.NODE_ENV === "production" ? "/" : ":8080/";
     const client = io(serverUrl);
-    const { lobbyId } = this.props;
     client.on("connect", (socket) => {
-      client.emit("requestGameState", lobbyId);
+      client.emit("requestGameState", this.lobbyId);
     });
     client.on("gameState", (updatedState) => {
       const { gameState } = this.state;
@@ -40,11 +36,10 @@ class Device extends Component {
   }
 
   setPlayerName = (playerName) => {
-    const { lobbyId } = this.state;
     this.setState({
       playerName: playerName
     });
-    this.client.emit("joinGame", lobbyId, playerName);
+    this.client.emit("joinGame", this.lobbyId, playerName);
   }
   playerCardClicked = (event) => {
     console.log("Hello at PlayerCard");
@@ -155,3 +150,5 @@ class Device extends Component {
   }
 
 }
+
+export default withRouter(Device);

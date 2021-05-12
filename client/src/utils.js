@@ -8,5 +8,3 @@ export default function sortPlayers(playersDict){
     });
     return playersArray
 }
-
-// modules.exports.sortPlayers = sortPlayers;

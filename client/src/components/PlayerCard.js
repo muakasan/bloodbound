@@ -22,27 +22,6 @@ export default class PlayerCard extends Component {
       playerName: "Aidan",
     };
   }
-  componentDidUpdate(prevProps, prevState) {
-    /*
-    // Only animate if clue changes
-    if (
-      prevProps.clues[0].length > 0 &&
-      (JSON.stringify(prevProps.clues) !== JSON.stringify(this.props.clues) ||
-        prevProps.color !== this.props.color)
-    ) {
-      this.setState({
-        hide: true,
-        oldClues: prevProps.clues,
-        oldColor: prevProps.color,
-      });
-      window.setTimeout(() => {
-        this.setState({
-          hide: false,
-        });
-      }, 600);
-    }
-    */
-  }
 
   render() {
     const { onMouseDown, player } = this.props;

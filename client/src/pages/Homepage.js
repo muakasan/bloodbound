@@ -25,6 +25,7 @@ export default class Homepage extends Component {
     return (
       <div className="homepage">
         <h1>BLOODBOUND</h1>
+        <h3>Enter Room Code</h3>
         <form onSubmit={this.handleSubmit}>
           <input type="text" value={formText} onChange={this.onChange} />
         </form>
