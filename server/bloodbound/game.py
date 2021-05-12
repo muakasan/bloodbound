@@ -28,7 +28,7 @@ class Game:
                     print(f'Game currently in step {self.state.step}, expected {steps}')
                     valid = False
                 # Check player ids valid
-                for arg, (name, _type) in zip(args, func.__annotations__.values()):
+                for arg, (name, _type) in zip(args, func.__annotations__.items()):
                     if _type is PlayerID and arg not in self.player_ids:
                         print(f'Arg {name} pid {arg}, expected {self.player_ids}')
                         valid = False
@@ -54,10 +54,11 @@ class Game:
     def new_game(self):
         self.state = GameState.build(self.player_ids, dummy=True)
 
-    @handler(Step.LOBBY)
     def join_game(self, pid: PlayerID) -> None:
-        join_room(self.game_code)
-        self.player_ids.add(pid)
+        if self.state.step == Step.LOBBY:
+            join_room(self.game_code)
+            self.player_ids.add(pid)
+        self.emit_game_state()
 
     @handler(Step.SET_TARGET)
     def set_target(self, pid: PlayerID, target_pid: PlayerID) -> None:
