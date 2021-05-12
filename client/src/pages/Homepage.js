@@ -24,7 +24,7 @@ export default class Homepage extends Component {
     const { formText } = this.state;
     return (
       <div className="homepage">
-        <h1>WAVELENGTH</h1>
+        <h1>BLOODBOUND</h1>
         <form onSubmit={this.handleSubmit}>
           <input type="text" value={formText} onChange={this.onChange} />
         </form>
