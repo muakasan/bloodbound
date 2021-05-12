@@ -55,19 +55,19 @@ export default class PlayerCard extends Component {
         });
         onMouseDown(event);
       }}
-      onMouseLeave={() => this.setState({ hover: false })}
-      onMouseEnter={() => this.setState({ hover: true })}
+          onMouseLeave={() => this.setState({ hover: false })}
+          onMouseEnter={() => this.setState({ hover: true })}
     >{playerName}
     {' '}
-    { tokens.map(token => {
+    { tokens.map((token, idx) => {
       if (token === Token.RANK){
-        return <strong>{ player.role }</strong>;
+        return <span key={idx}><strong>{ player.role }</strong></span>;
       }
       return TOKENTOEMOJI[token];
     }) }
     {' - '}
-    { items.map(item => {
-      return ITEMTOEMOJI[item];
+    { items.map((item, idx) => {
+      return <span key={idx}>{ ITEMTOEMOJI[item] }</span>;
     }) }
     </li>
     );

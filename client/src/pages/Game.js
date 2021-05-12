@@ -299,7 +299,8 @@ class Device extends Component {
           { playersList.map((value, index) => {
             return <PlayerCard 
               onMouseDown={this.playerCardClicked}
-              player={value}/>
+              player={value}
+              key={index}/>
           })}
         </ul>
         </div>
