@@ -6,7 +6,7 @@ import random
 GameCode = str
 
 # Mock SocketIO for unit testing
-if True:
+if False:
     class SocketIO:
         def __init__(self):
             self.rooms = {}
@@ -28,7 +28,7 @@ class Game:
                     print(f'Game currently in step {self.state.step}, expected {steps}')
                     valid = False
                 # Check player ids valid
-                for arg, (name, _type) in zip(args, func.__annotations__.values()):
+                for arg, (name, _type) in zip(args, func.__annotations__.items()):
                     if _type is PlayerID and arg not in self.player_ids:
                         print(f'Arg {name} pid {arg}, expected {self.player_ids}')
                         valid = False
@@ -59,6 +59,7 @@ class Game:
         join_room(self.game_code)
         self.player_ids.add(pid)
 
+    # Stabbing
     @handler(Step.SET_TARGET)
     def set_target(self, pid: PlayerID, target_pid: PlayerID) -> None:
         if pid == self.state.active and pid != target_pid:
@@ -83,6 +84,7 @@ class Game:
                 self.state.intervener = offer_pid
                 self.state.step = Step.SET_WOUND_I
 
+    # Can use ability (has not yet taken rank token)
     @handler(Step.SET_WOUND_I)
     def set_wound_i(self, pid: PlayerID, token: Token):
         raise NotImplementedError

@@ -62,12 +62,26 @@ def test_connection() -> None:
 def handle_set_target(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.set_target(pid, target_pid)
 
-
 @socketio.on("newGame")
 @active_game
 def handle_new_game(game: Game) -> None:
     game.new_game()
 
+@socketio.on("noAbility")
+@active_game
+def handle_no_ability(game: Game, pid: PlayerID) -> None:
+    game.no_ability(pid)
+
+@socketio.on("elderAbility")
+@active_game
+def handle_elder_ability(game: Game, pid: PlayerID) -> None:
+    print("Called Elder Ability")
+    game.elder_ability(pid)
+
+@socketio.on("assassinAbility")
+@active_game
+def handle_assassin_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.assassin_ability(pid, target_pid)
 
 def get_or_create_game(game_code: str) -> Game:
     global games

@@ -76,6 +76,7 @@ class Step(str, Enum):
 
 @dataclass
 class Player:
+    name: PlayerID
     team: Team
     role: Role
     tokens: List[Token]
@@ -100,23 +101,23 @@ class GameState:
     @classmethod
     def build(cls, pids: Set[PlayerID], dummy=False):
         if dummy:
-            pids = set([0, 1, 2, 3, 4, 5, 6, 7])
+            pids = ["aidan", "duke", "kelvin", "aaron", "piotr", "ankur", "zaaim", "annie"]
             new_instance = GameState()
             team_size = len(pids) // 2
-            red_team = set(random.sample(pids, k=team_size))
-            red_roles = random.sample(list(Role), k=team_size)
-            blue_roles = random.sample(list(Role), k=team_size)
-            for pid in pids:
+            red_team = ["aidan", "kelvin", "piotr", "zaaim"]
+            red_roles = [Role.ALCHEMIST, Role.HARLEQUIN, Role.ASSASSIN, Role.ELDER]
+            blue_roles = [Role.COURTESAN, Role.MAGE, Role.BERSERKER, Role.MENTALIST]
+            for (i, pid) in enumerate(pids):
                 team = Team.RED if pid in red_team else Team.BLUE
                 role = red_roles.pop() if team == Team.RED else blue_roles.pop()
                 tokens = role.tokens()
                 items = []
-                player = Player(team, role, tokens, items, pid) # PID currently is position index
+                player = Player(pid, team, role, tokens, items, i) # PID currently is position index
                 new_instance.players[pid] = player
-            new_instance.players[0].items = [Item.SWORD, Item.STAFF]
-            new_instance.players[1].items = [Item.SHIELD]
-            new_instance.players[1].tokens = [Token.BLUE, Token.GREY]
-            new_instance.players[2].tokens = [Token.RANK]
+            new_instance.players["aidan"].items = [Item.SWORD, Item.STAFF]
+            new_instance.players["duke"].items = [Item.SHIELD]
+            new_instance.players["duke"].tokens = [Token.BLUE, Token.GREY]
+            new_instance.players["kelvin"].tokens = [Token.RANK]
             return new_instance
         assert len(pids) % 2 == 0 # don't support inquisitor yet
         new_instance = GameState()
@@ -129,7 +130,7 @@ class GameState:
             role = red_roles.pop() if team == Team.RED else blue_roles.pop()
             tokens = role.tokens()
             items = []
-            player = Player(team, role, tokens, items, 0) # TODO make position correct
+            player = Player(pid, team, role, tokens, items, 0) # TODO make position correct
             new_instance.players[pid] = player
         return new_instance
 

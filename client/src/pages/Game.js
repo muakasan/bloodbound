@@ -5,7 +5,7 @@ import PlayerCard from "../components/PlayerCard";
 import ChooseName from "../components/ChooseName";
 import Lobby from "../components/Lobby";
 
-import { Token, Role, Item, Step } from "../enums";
+import { Token, Role, Item, Step, RoleToStr } from "../enums";
 
 
 class Device extends Component {
@@ -30,7 +30,7 @@ class Device extends Component {
     client.on("gameState", (updatedState) => {
       const { gameState } = this.state;
       this.setState({ loading: false, gameState: { ...gameState, ...updatedState }});
-      console.log(`UPDATED GAME STATE: ${updatedState}`)
+      console.log(`UPDATED GAME STATE: ${updatedState}`);
     });
     this.client = client;
   }
@@ -41,13 +41,28 @@ class Device extends Component {
     });
     this.client.emit("joinGame", this.lobbyId, playerName);
   }
+
   playerCardClicked = (event) => {
     console.log("Hello at PlayerCard");
-  };
-
+    const { playerName, gameState } = this.state;
+    console.log(playerName);
+    console.log(gameState);
+    this.useAbility();
+  }
+  
+  useAbility = () => {
+    const { playerName, gameState } = this.state;
+    const player = gameState.players[playerName];
+    console.log(player.rank);
+    console.log(RoleToStr);
+    let messageName = `${RoleToStr[player.role]}Ability`;
+    console.log(messageName);
+    this.client.emit(messageName, this.lobbyId, playerName);
+  }
+  
   render() {
     const { gameState, playerName, loading } = this.state;
-
+    console.log(gameState);
     const elements = ['test', 'test2'];
     if (loading) {
       return (

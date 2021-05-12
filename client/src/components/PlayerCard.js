@@ -18,15 +18,12 @@ TOKENTOEMOJI[Token.GREY] = String.fromCodePoint(0x26AA); // White Circle
 export default class PlayerCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      playerName: "Aidan",
-    };
   }
 
   render() {
     const { onMouseDown, player } = this.props;
     const { tokens, items } = player;
-    const { playerName } = this.state;
+    const { name } = player;
     return (
       <li onMouseDown={(event) => {
         this.setState({
@@ -36,7 +33,7 @@ export default class PlayerCard extends Component {
       }}
           onMouseLeave={() => this.setState({ hover: false })}
           onMouseEnter={() => this.setState({ hover: true })}
-    >{playerName}
+    >{name}
     {' '}
     { tokens.map((token, idx) => {
       if (token === Token.RANK){

@@ -22,6 +22,18 @@ const Role = {
   COURTESAN: 9,
 };
 
+const RoleToStr = {
+  1: "elder",
+  2: "assassin",
+  3: "harlequin",
+  4: "alchemist",
+  5: "mentalist",
+  6: "guardian",
+  7: "beserker",
+  8: "mage",
+  9: "courtesan",
+}
+
 const Item = {
   SWORD: "sword",
   FAN: "fan",
@@ -38,4 +50,4 @@ const Step = {
   COMPLETE: "complete",
 };
 
-export { Token, Role, Item, Step };
+export { Token, Role, Item, Step, RoleToStr };
