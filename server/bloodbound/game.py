@@ -54,10 +54,11 @@ class Game:
     def new_game(self):
         self.state = GameState.build(self.player_ids, dummy=True)
 
-    @handler(Step.LOBBY)
     def join_game(self, pid: PlayerID) -> None:
-        join_room(self.game_code)
-        self.player_ids.add(pid)
+        if self.state.step == Step.LOBBY:
+            join_room(self.game_code)
+            self.player_ids.add(pid)
+        self.emit_game_state()
 
     # Stabbing
     @handler(Step.SET_TARGET)
