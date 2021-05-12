@@ -1,5 +1,5 @@
 from flask import Flask, render_template, send_from_directory
-from flask_socketio import SocketIO, join_room
+from flask_socketio import SocketIO, join_room, emit
 import random
 import os
 from typing import Any
@@ -51,6 +51,10 @@ def handle_message(data):
 def handle_join_game(game: Game, pid: PlayerID) -> None:
     game.join_game(pid)
 
+@socketio.on("connect")
+def test_connection() -> None:
+    print("Connected")
+    emit('my response', {'data': 'Connected'})
 
 @socketio.on("setTarget")
 @active_game

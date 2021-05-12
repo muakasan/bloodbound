@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { useParams } from "react-router-dom";
-import socketIOClient from "socket.io-client";
+import { io } from "socket.io-client";
 import PlayerCard from "../components/PlayerCard";
 
 /*
@@ -55,10 +55,11 @@ class Device extends Component {
 
   componentDidMount() {
     const serverUrl = process.env.NODE_ENV === "production" ? "/" : ":8080/";
-    const client = socketIOClient(serverUrl);
+    console.log(serverUrl);
+    const client = io(serverUrl);
     const { lobbyId } = this.props;
-
-    client.on("connect", () => {
+    console.log("Component Mounted");
+    client.on("connect", (socket) => {
       client.emit("requestGameState", lobbyId);
       console.log("REQUEST GAME STATE " + lobbyId);
     });
