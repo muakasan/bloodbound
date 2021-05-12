@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import PlayerCard from "../components/PlayerCard";
-import Lobby from "../components/Lobby"
+import ChooseName from "../components/ChooseName";
+import Lobby from "../components/Lobby";
 
 /*
 import { LeftBrain, RightBrain } from "../components/Shapes";
@@ -24,6 +25,7 @@ class Device extends Component {
 
     this.deviceInner = React.createRef();
     this.state = {
+      playerName: "",
       gameState: {},
       psychic: false,
       controlsDisabled: false,
@@ -90,6 +92,13 @@ class Device extends Component {
     this.setState({
       client: client,
     });
+  }
+  setPlayerName = (playerName) => {
+    const { client, lobbyId } = this.state;
+    this.setState({
+      playerName: playerName
+    });
+    client.emit("joinGame", lobbyId, playerName);
   }
   playerCardClicked = (event) => {
     console.log("Hello at PlayerCard");
@@ -229,7 +238,7 @@ class Device extends Component {
   };
 
   render() {
-    const { psychic, gameState, loading } = this.state;
+    const { psychic, gameState, loading, playerName } = this.state;
 
     const elements = ['test', 'test2'];
     if (loading) {
@@ -282,7 +291,10 @@ class Device extends Component {
     } = gameState;
     if (step === Step.LOBBY){
       console.log(gameState);
-      return <Lobby players={players} playerCardClicked={this.playerCardClicked}/>
+      if (playerName === ""){
+        return <ChooseName setPlayerName={this.setPlayerName}/>
+      }
+      return <Lobby players={players} playerCardClicked={this.playerCardClicked} name={playerName}/>
     }
     if (step === Step.INGAME){
       return (

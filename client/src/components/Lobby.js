@@ -32,7 +32,7 @@ export default class Lobby extends Component {
   }
 
   render() {
-    const { players, playerCardClicked } = this.props;
+    const { players, playerCardClicked, name } = this.props;
     // const { onMouseDown, player } = this.props;
     // const { tokens, items } = player;
     // const { playerName } = this.state;

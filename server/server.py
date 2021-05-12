@@ -48,7 +48,8 @@ def handle_message(data):
 
 @socketio.on("joinGame")
 @active_game
-def handle_join_game(game: Game, pid: PlayerID) -> None:
+def handle_join_game(game: Game, pid: str) -> None:
+    print(f'{pid} joined {game}')
     game.join_game(pid)
 
 @socketio.on("connect")
