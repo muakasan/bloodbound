@@ -1,6 +1,5 @@
 from typing import Optional
-#from bloodbound.game_state import PlayerID, GameState, Item, Role, Team, Step, Token
-from game_state import PlayerID, GameState, Item, Role, Team, Step, Token
+from bloodbound.game_state import PlayerID, GameState, Item, Role, Team, Step, Token
 from flask_socketio import SocketIO, join_room
 import random
 
@@ -81,7 +80,7 @@ class Game:
                 (Item.SHIELD_I not in target.items) and \
                 (Item.SHIELD_II not in target.items):
             self.state.target = target_pid
-            if Item.FAN in target.items and len(player.shown_tokens) == 3:
+            if Item.FAN in target.items and len(target.shown_tokens) == 3:
                 self.state.captured = target_pid
                 self.state.step = Step.COMPLETE
             elif Item.FAN in target.items:
@@ -101,10 +100,8 @@ class Game:
         if pid != self.state.target and \
                 (Token.RANK not in player.shown_tokens):
             self.state.intervene_offers[pid] = offer
-        if set(self.state.intervene_offers.keys()) == set(self.player_ids):
-            self.state.step = Step.ACK_INTERVENE
 
-    @handler(Step.ACK_INTERVENE)
+    @handler(Step.INTERVENE)
     def ack_intervene(self, pid: PlayerID, offer_pid: Optional[PlayerID]) -> None:
         player = self.state.players[pid]
         if pid == self.state.target:
@@ -115,7 +112,8 @@ class Game:
                 self.state.intervener = None
                 self.state.wounded = pid
                 self.state.step = Step.SET_WOUND_I
-            elif offer_pid != pid and self.state.intervene_offers[offer_pid]:
+            elif offer_pid != pid and self.state.intervene_offers.get(offer_pid, False):
+                self._wound_helper(offer_pid, Token.RANK)
                 self.state.intervener = offer_pid
                 self.state.wounded = offer_pid
                 self.state.step = Step.SET_ABILITY
@@ -161,10 +159,15 @@ class Game:
     def assassin_wound(self, pid: PlayerID, token_1: Token, token_2: Token):
         player = self.state.players[pid]
         if pid == self.state.wounded:
+            #TODO: do this more cleanly
+            tokens, shown_tokens = player.tokens.copy(), player.shown_tokens.copy()
             if self._wound_helper(pid, token_1) and \
                     self._wound_helper(pid, token_2):
                 self.state.active = pid
                 self.state.step = Step.SET_TARGET
+            else:
+                player.tokens = tokens
+                player.shown_tokens = shown_tokens
 
     @handler(Step.SET_ABILITY)
     def harlequin_ability(self, pid: PlayerID, target_pid_1: PlayerID, target_pid_2: PlayerID):
@@ -228,7 +231,7 @@ class Game:
             target = self.state.players[target_pid]
             # Give SWORD/SHIELD_I if nobody else has SWORD_I, else SWORD_II
             give_sword_i = not any([Item.SWORD_I in self.state.players[p].items \
-                for p in self.player_ids and p != pid])
+                for p in self.player_ids if p != pid])
             sword, shield = (Item.SWORD_I, Item.SHIELD_I) if give_sword_i else (Item.SWORD_II, Item.SHIELD_II)
             if sword not in player.items:
                 player.items.append(sword)
@@ -246,7 +249,7 @@ class Game:
                 self.state.captured = self.state.active
                 self.state.step = Step.COMPLETE
             else:
-                self.state.wounded = target_pid
+                self.state.wounded = self.state.active
                 self.state.next_active = pid
                 self.state.step = Step.SET_WOUND_II
 
@@ -254,10 +257,13 @@ class Game:
     def mage_ability(self, pid: PlayerID, target_pid: PlayerID):
         player = self.state.players[pid]
         if pid == self.state.wounded and player.role == Role.MAGE:
+            _token_map = lambda t: t if t == Token.RANK else Token.GREY
             target = self.state.players[target_pid]
             if Item.STAFF not in player.items:
                 player.items.append(Item.STAFF)
+                player.tokens = [_token_map(t) for t in player.tokens]
             target.items.append(Item.STAFF)
+            target.tokens = [_token_map(t) for t in target.tokens]
             self.state.active = pid
             self.state.step = Step.SET_TARGET
 
