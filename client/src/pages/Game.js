@@ -30,7 +30,6 @@ class Device extends Component {
     client.on("gameState", (updatedState) => {
       const { gameState } = this.state;
       this.setState({ loading: false, gameState: { ...gameState, ...updatedState }});
-      console.log(`UPDATED GAME STATE: ${updatedState}`);
     });
     this.client = client;
   }
@@ -109,7 +108,7 @@ class Device extends Component {
     }
 
     const {
-      players, 
+      playerIds,
       step
     } = gameState;
     if (step === Step.LOBBY){
@@ -117,7 +116,7 @@ class Device extends Component {
       if (playerName === ""){
         return <ChooseName setPlayerName={this.setPlayerName}/>
       }
-      return <Lobby players={players} playerCardClicked={this.playerCardClicked} name={playerName}/>
+      return <Lobby playerIds={playerIds} playerCardClicked={this.playerCardClicked} name={playerName}/>
     }
     if (step === Step.INGAME){
       return (

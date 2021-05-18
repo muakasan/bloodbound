@@ -52,7 +52,7 @@ class Game:
         self.emit_game_state()
 
     def emit_game_state(self) -> None:
-        self.sio.emit("gameState", self.state.encode(), json=True, room=self.game_code)
+        self.sio.emit("gameState", { **self.state.encode(), "playerIds": list(self.player_ids) }, json=True, room=self.game_code)
 
     def join_game(self, pid: PlayerID) -> None:
         if self.state.step == Step.LOBBY:

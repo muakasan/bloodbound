@@ -16,10 +16,6 @@ TOKENTOEMOJI[Token.RED] = String.fromCodePoint(0x1F534); // Red Circle
 TOKENTOEMOJI[Token.GREY] = String.fromCodePoint(0x26AA); // White Circle
 
 export default class PlayerCard extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { onMouseDown, player } = this.props;
     const { tokens, items } = player;
