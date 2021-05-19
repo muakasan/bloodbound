@@ -8,7 +8,7 @@ Web app for playing the Bloodbound card game.
 #### Backend Setup
 1. Install pip
 2. cd server
-3. python -m python3 -m venv bb_venv
+3. python -m venv bb_venv
 4. source bb_venv/bin/activate
 5. pip install -r requirements.txt
 6. python server.py
