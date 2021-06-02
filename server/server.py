@@ -89,42 +89,52 @@ def handle_assasin_wound(game: Game, pid: PlayerID, token_1: str, token_2: str) 
     game.assassin_wound(pid, Token(token_1), Token(token_2))
 
 @socketio.on("harlequinAbility")
+@active_game
 def handle_harlequin_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.harlequin_ability(pid, target_pid)
 
 @socketio.on("alchemistAbility")
+@active_game
 def handle_alchemist_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.alchemist_ability(pid, target_pid)
 
 @socketio.on("alchemistHeal")
+@active_game
 def handle_alchemist_heal(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.alchemist_heal(pid, target_pid)
 
 @socketio.on("mentalistAbility")
+@active_game
 def handle_mentalist_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.mentalist_ability(pid, target_pid)
 
 @socketio.on("guardianAbility")
+@active_game
 def handle_guardian_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.guardian_ability(pid, target_pid)
 
 @socketio.on("berserkerAbility")
+@active_game
 def handle_berserker_ability(game: Game, pid: PlayerID) -> None:
     game.berserker_ability(pid)
 
 @socketio.on("mageAbility")
+@active_game
 def handle_mage_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.mage_ability(pid, target_pid)
 
 @socketio.on("courtesanAbility")
+@active_game
 def handle_courtesan_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.courtesan_ability(pid, target_pid)
 
 @socketio.on("setWoundII")
+@active_game
 def handle_set_wound_ii(game: Game, pid: PlayerID, token: str) -> None:
     game.set_wound_ii(pid, Token(token))
 
 @socketio.on("ackComplete")
+@active_game
 def handle_ack_complete(game: Game, pid: PlayerID) -> None:
     game.ack_complete(pid)
 
