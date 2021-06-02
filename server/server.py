@@ -83,6 +83,51 @@ def handle_elder_ability(game: Game, pid: PlayerID) -> None:
 def handle_assassin_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
     game.assassin_ability(pid, target_pid)
 
+@socketio.on("assassinWound")
+@active_game
+def handle_assasin_wound(game: Game, pid: PlayerID, token_1: str, token_2: str) -> None:
+    game.assassin_wound(pid, Token(token_1), Token(token_2))
+
+@socketio.on("harlequinAbility")
+def handle_harlequin_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.harlequin_ability(pid, target_pid)
+
+@socketio.on("alchemistAbility")
+def handle_alchemist_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.alchemist_ability(pid, target_pid)
+
+@socketio.on("alchemistHeal")
+def handle_alchemist_heal(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.alchemist_heal(pid, target_pid)
+
+@socketio.on("mentalistAbility")
+def handle_mentalist_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.mentalist_ability(pid, target_pid)
+
+@socketio.on("guardianAbility")
+def handle_guardian_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.guardian_ability(pid, target_pid)
+
+@socketio.on("berserkerAbility")
+def handle_berserker_ability(game: Game, pid: PlayerID) -> None:
+    game.berserker_ability(pid)
+
+@socketio.on("mageAbility")
+def handle_mage_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.mage_ability(pid, target_pid)
+
+@socketio.on("courtesanAbility")
+def handle_courtesan_ability(game: Game, pid: PlayerID, target_pid: PlayerID) -> None:
+    game.courtesan_ability(pid, target_pid)
+
+@socketio.on("setWoundII")
+def handle_set_wound_ii(game: Game, pid: PlayerID, token: str) -> None:
+    game.set_wound_ii(pid, Token(token))
+
+@socketio.on("ackComplete")
+def handle_ack_complete(game: Game, pid: PlayerID) -> None:
+    game.ack_complete(pid)
+
 def get_or_create_game(game_code: str) -> Game:
     global games
     if game_code in games:
